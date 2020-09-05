@@ -13,7 +13,7 @@ def moving_average(a, n=200):
 SRATE = 100
 MINUTES_AHEAD = 5
 MAX_CASES = 300
-TEST_NAME = 'test1'
+TEST_NAME = 'test2'
 
 # 전체 art 케이스를 로딩
 # 제외 기준, 포함 기준은 다 포함 되어있음
@@ -70,10 +70,10 @@ for _, row in df_cases.iterrows():
         # 결측값 10% 이상이면
         if np.mean(np.isnan(segx)) > 0.1 or \
             np.mean(np.isnan(segy)) > 0.1 or \
-            np.max(segx) > 200 or np.min(segx) < 20 or \
-            np.max(segy) > 200 or np.min(segy) < 20 or \
-            np.max(segx) - np.min(segx) < 30 or \
-            np.max(segy) - np.min(segy) < 30 or \
+            np.nanmax(segx) > 200 or np.nanmin(segx) < 20 or \
+            np.nanmax(segy) > 200 or np.nanmin(segy) < 20 or \
+            np.nanmax(segx) - np.nanmin(segx) < 30 or \
+            np.nanmax(segy) - np.nanmin(segy) < 30 or \
             (np.abs(np.diff(segx[~np.isnan(segx)])) > 30).any() or \
             (np.abs(np.diff(segy[~np.isnan(segy)])) > 30).any():
             i += SRATE  # 1 sec 씩 전진
