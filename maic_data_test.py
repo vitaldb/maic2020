@@ -68,14 +68,25 @@ for _, row in df_cases.iterrows():
         segy = vals[i + SRATE * (20 + MINUTES_AHEAD * 60):i + SRATE * (20 + (1 + MINUTES_AHEAD) * 60)]
 
         # 결측값 10% 이상이면
-        if np.mean(np.isnan(segx)) > 0.1 or \
-            np.mean(np.isnan(segy)) > 0.1 or \
-            np.nanmax(segx) > 200 or np.nanmin(segx) < 20 or \
-            np.nanmax(segy) > 200 or np.nanmin(segy) < 20 or \
-            np.nanmax(segx) - np.nanmin(segx) < 30 or \
-            np.nanmax(segy) - np.nanmin(segy) < 30 or \
-            (np.abs(np.diff(segx[~np.isnan(segx)])) > 30).any() or \
-            (np.abs(np.diff(segy[~np.isnan(segy)])) > 30).any():
+        valid = True
+        if np.mean(np.isnan(segx)) > 0.1:
+            valid = False
+        elif np.mean(np.isnan(segy)) > 0.1:
+            valid = False
+        elif np.nanmax(segx) > 200 or np.nanmin(segx) < 20:
+            valid = False
+        elif np.nanmax(segy) > 200 or np.nanmin(segy) < 20:
+            valid = False
+        elif np.nanmax(segx) - np.nanmin(segx) < 30:
+            valid = False
+        elif np.nanmax(segy) - np.nanmin(segy) < 30:
+            valid = False
+        elif np.abs(np.diff(segx[~np.isnan(segx)])) > 30).any():
+            valid = False
+        elif np.abs(np.diff(segy[~np.isnan(segy)])) > 30).any():
+            valid = False
+            
+        if not valid:
             i += SRATE  # 1 sec 씩 전진
             continue
 
